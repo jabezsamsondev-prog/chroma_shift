@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta
+      name="description"
+      content="Chroma Shift — A cyberpunk reflex training game. Tap numbers in order. Precision. Speed. Control."
+    />
+    <meta name="theme-color" content="#0a0a1a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <title>Chroma Shift</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ═══════════════════════════════════════ -->
+    <!--            BACKGROUND LAYER            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="bg-noise" id="bgNoise"></div>
+    <div class="bg-gradient"></div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--            START SCREEN                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="screen active" id="startScreen">
+      <div class="screen-content">
+        <div class="logo-section">
+          <h1 class="game-title" id="gameTitle">
+            <span class="title-chroma">CHROMA</span>
+            <span class="title-shift">SHIFT</span>
+          </h1>
+          <p class="tagline">Precision. Speed. Control.</p>
+        </div>
+
+        <div class="level-selector" id="levelSelector">
+          <h2 class="section-label">SELECT LEVEL</h2>
+          <div class="level-buttons">
+            <button class="level-btn active" data-level="1" id="levelBtn1">
+              <span class="level-name">STANDARD</span>
+              <span class="level-info">5×5 · 30s</span>
+              <span class="level-best" id="bestTime1">—</span>
+            </button>
+            <button class="level-btn" data-level="2" id="levelBtn2">
+              <span class="level-name">PRO</span>
+              <span class="level-info">5×5 · 22s</span>
+              <span class="level-best" id="bestTime2">—</span>
+            </button>
+            <button class="level-btn" data-level="3" id="levelBtn3">
+              <span class="level-name">ELITE</span>
+              <span class="level-info">5×5 · 18s</span>
+              <span class="level-best" id="bestTime3">—</span>
+            </button>
+            <button class="level-btn" data-level="4" id="levelBtn4">
+              <span class="level-name">OMEGA</span>
+              <span class="level-info">6×6 · SHIFT</span>
+              <span class="level-best" id="bestTime4">—</span>
+            </button>
+          </div>
+        </div>
+
+        <button class="play-btn" id="playBtn">
+          <span class="play-btn-text">INITIALIZE</span>
+          <span class="play-btn-icon">▶</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--            GAME SCREEN                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="screen" id="gameScreen">
+      <div class="screen-content game-layout">
+        <!-- Top HUD -->
+        <div class="game-hud" id="gameHud">
+          <div class="hud-row">
+            <div class="hud-item">
+              <span class="hud-label">LEVEL</span>
+              <span class="hud-value" id="hudLevel">STANDARD</span>
+            </div>
+            <div class="hud-item hud-timer-section">
+              <span class="hud-label" id="timerLabel">TIME</span>
+              <span class="hud-value hud-timer" id="hudTimer">0.00</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">BEST</span>
+              <span class="hud-value hud-best" id="hudBest">—</span>
+            </div>
+          </div>
+          <div class="hud-row hud-secondary">
+            <div class="hud-item">
+              <span class="hud-label">COMBO</span>
+              <span class="hud-value hud-combo" id="hudCombo">×0</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">NEXT</span>
+              <span class="hud-value hud-next" id="hudNext">1</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">PENALTY</span>
+              <span class="hud-value hud-penalty" id="hudPenalty">+0.0s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Container -->
+        <div class="grid-wrapper" id="gridWrapper">
+          <div class="grid-container" id="gridContainer"></div>
+          <div class="grid-sweep" id="gridSweep"></div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="game-controls" id="gameControls">
+          <button class="ctrl-btn" id="restartBtn" title="Restart">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+            <span>RESTART</span>
+          </button>
+          <button class="ctrl-btn" id="changeLevelBtn" title="Change Level">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <span>LEVEL</span>
+          </button>
+          <button class="ctrl-btn" id="soundToggleBtn" title="Sound">
+            <svg
+              class="sound-on-icon"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path
+                d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+              ></path>
+            </svg>
+            <svg
+              class="sound-off-icon"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="display: none"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+            <span>SOUND</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--          GAME OVER SCREEN              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="screen" id="gameOverScreen">
+      <div class="screen-content gameover-layout">
+        <div class="gameover-status" id="gameoverStatus">
+          <h2 class="gameover-title" id="gameoverTitle">SEQUENCE COMPLETE</h2>
+          <div class="gameover-time-display">
+            <span class="gameover-time-label">FINAL TIME</span>
+            <span class="gameover-time" id="gameoverTime">0.00s</span>
+          </div>
+        </div>
+
+        <div class="rank-reveal" id="rankReveal">
+          <div class="rank-label">CLASSIFICATION</div>
+          <div class="rank-badge" id="rankBadge">
+            <span class="rank-text" id="rankText">BEGINNER</span>
+          </div>
+          <div class="rank-sub" id="rankSub"></div>
+        </div>
+
+        <div class="gameover-stats" id="gameoverStats">
+          <div class="stat-item">
+            <span class="stat-label">BEST COMBO</span>
+            <span class="stat-value" id="statCombo">×0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">PENALTIES</span>
+            <span class="stat-value" id="statPenalties">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">PENALTY TIME</span>
+            <span class="stat-value" id="statPenaltyTime">+0.0s</span>
+          </div>
+        </div>
+
+        <div class="gameover-actions">
+          <button class="play-btn" id="playAgainBtn">
+            <span class="play-btn-text">RETRY</span>
+            <span class="play-btn-icon">▶</span>
+          </button>
+          <button class="ctrl-btn gameover-level-btn" id="gameoverLevelBtn">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <span>CHANGE LEVEL</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--            PARTICLES CANVAS            -->
+    <!-- ═══════════════════════════════════════ -->
+    <canvas id="particlesCanvas"></canvas>
+
+    <script src="script.js"></script>
+  </body>
+</html>
